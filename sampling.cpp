@@ -27,20 +27,21 @@ fs-> sampling freq
 durations-> signal duration in seconds
 N-> number of samples = duration*fs
 */
-vector<double> generateSignal(double f, double fs, double duration){
+vector<double> generateSignal(double f1,double f2, double fs, double duration){
     int N=duration*fs;
     vector<double> signal(N);
     for(int n=0;n<N;n++){
         double t=n/fs;  //actual time at which the nth sample is taken
-        signal[n]=sin(2*M_PI*f*t);  //generating a sine wave signal
+        signal[n]=sin(2*M_PI*f1*t) + sin(2*M_PI*f2*t);  //generating 2 sine wave signal
     }
     return signal;
 } 
 
 int main(){
-    double f,fs,duration;
-    f=5;fs=6;duration=10;
-    vector<double> signal=generateSignal(f,fs,duration);
+    double f1,f2,fs,duration;
+    f1=10,f2=15;fs=3;duration=5; // aliasing will occur as fs<2f -> fs<2*f
+
+    vector<double> signal=generateSignal(f1,f2,fs,duration);
     vector<complex<double>> x=DFT(signal);
     cout<<"DFT of the generated signal:"<<endl;
     for(int i=0;i<x.size();i++){
